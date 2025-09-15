@@ -12,25 +12,39 @@ import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import java.util.concurrent.TimeUnit
 
-class AuthViewModel {
-
+class AuthViewModel : ViewModel() {
 
     private val _verificationId = MutableStateFlow<String?>(null)
+    val verificationId: StateFlow<String?> = _verificationId
 
-    private val _otpSent = MutableStateFlow(false)
-    val otpSent = _otpSent
+    private val _otpSent = MutableStateFlow<Boolean?>(null)
+    val otpSent: StateFlow<Boolean?> = _otpSent
+
+    private val _otpError = MutableStateFlow<String?>(null)
+    val otpError: StateFlow<String?> = _otpError
 
     fun sendOTP(userNumber: String, activity: Activity) {
+        _otpSent.value = null // Reset before sending
+        _otpError.value = null
+
         val callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
             override fun onVerificationCompleted(credential: PhoneAuthCredential) {
-
+                // Auto-retrieval or instant verification, may not need UI update
             }
 
             override fun onVerificationFailed(e: FirebaseException) {
-
+                Log.e("AuthViewModel", "Verification failed: ${e.message}", e)
+                _otpSent.value = false
+                _otpError.value = when (e) {
+                    is FirebaseAuthInvalidCredentialsException -> "Invalid phone number."
+                    is FirebaseTooManyRequestsException -> "Too many requests, please try again later."
+                    is FirebaseAuthMissingActivityForRecaptchaException -> "Recaptcha verification failed."
+                    else -> e.localizedMessage ?: "OTP sending failed. Try again."
+                }
             }
 
             override fun onCodeSent(

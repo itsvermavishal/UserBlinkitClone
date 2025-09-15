@@ -21,6 +21,8 @@ playServicesAuth = "19.2.0"
 playServicesAuthApiPhone = "18.2.0"
 sdpAndroid = "1.0.6"
 sspAndroid = "1.0.6"
+androidxNavigationFragmentKtx = "2.9.4"
+navigationUiKtx = "2.9.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -50,6 +52,8 @@ play-services-auth = { module = "com.google.android.gms:play-services-auth", ver
 play-services-auth-api-phone = { module = "com.google.android.gms:play-services-auth-api-phone", version.ref = "playServicesAuthApiPhone" }
 sdp-android = { module = "com.intuit.sdp:sdp-android", version.ref = "sdpAndroid" }
 ssp-android = { module = "com.intuit.ssp:ssp-android", version.ref = "sspAndroid" }
+androidx-navigation-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "androidxNavigationFragmentKtx" }
+androidx-navigation-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigationUiKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -30,9 +30,30 @@ class OTPFragment : Fragment() {
         getUserNumber()
         customizingEnteringOTP()
         sendOTP()
+        onLoginButtonClicked()
         onBackButtonClicked()
 
         return binding.root
+    }
+
+    private fun onLoginButtonClicked() {
+        binding.btnLogin.setOnClickListener {
+            Utils.showDialog(requireContext(), "Signing you")
+            val editTexts = arrayOf(binding.etotp1, binding.etotp2, binding.etotp3, binding.etotp4, binding.etotp5, binding.etotp6)
+            val otp = editTexts.joinToString("") { it.text.toString() }
+
+            if (otp.length < editTexts.size){
+                Utils.showToast(requireContext(), "Please enter a valid OTP")
+            }
+            else{
+                editTexts.forEach { it.text?.clear(); it.clearFocus() }
+            }
+            verifyOTP(otp)
+        }
+    }
+
+    private fun verifyOTP(otp: String) {
+
     }
 
     private fun sendOTP() {
@@ -40,13 +61,23 @@ class OTPFragment : Fragment() {
         viewModel.apply {
             sendOTP(userNumber, requireActivity())
             lifecycleScope.launch {
-                otpSent.collect{
-                    if (it){
+                viewModel.otpSent.collect { sent ->
+                    if (sent == true) {
                         Utils.hideDialog()
                         Utils.showToast(requireContext(), "OTP sent successfully")
+                    } else if (sent == false) {
+                        Utils.hideDialog()
+                        // Error will be shown by otpError collector
                     }
                 }
-
+            }
+            lifecycleScope.launch {
+                viewModel.otpError.collect { errorMsg ->
+                    if (!errorMsg.isNullOrEmpty()) {
+                        Utils.hideDialog()
+                        Utils.showToast(requireContext(), errorMsg)
+                    }
+                }
             }
         }
 
@@ -82,11 +113,17 @@ class OTPFragment : Fragment() {
     }
 
     private fun getUserNumber() {
-        val bundle = arguments
-        userNumber = bundle?.getString("number").toString()
+        val number = arguments?.getString("number")
 
-        binding.tvUserNumber.text = userNumber
+        if (number.isNullOrEmpty()) {
+            Utils.showToast(requireContext(), "Phone number missing. Navigating back.")
+            findNavController().popBackStack()
+        } else {
+            userNumber = number
+            binding.tvUserNumber.text = number
+        }
     }
+
 
 
 }

@@ -22,23 +22,26 @@ class SignFragment : Fragment() {
     ): View {
         binding = FragmentSignBinding.inflate(layoutInflater)
         setStatusBarColor()
-
         getUserNumber()
+        onContinueClick()
         return binding.root
     }
 
     private fun onContinueClick() {
         binding.btnContinue.setOnClickListener {
-            val number = binding.etUserInput.text.toString()
-
-            if (number.isEmpty() || number.length != 10) {
-                Utils.showToast(requireContext(), "Please enter a valid number")
-            }
-            else{
-                val bundle = Bundle()
-                bundle.putString("number", number)
-                findNavController().navigate(R.id.action_signFragment_to_OTPFragment, bundle)
-
+            try {
+                val number = binding.etUserInput.text.toString()
+                if (!number.matches(Regex("^\\d{10}$"))) {
+                    Utils.showToast(requireContext(), "Please enter a valid 10-digit number")
+                } else {
+                    val bundle = Bundle().apply {
+                        putString("number", number)
+                    }
+                    findNavController().navigate(R.id.action_signFragment_to_OTPFragment, bundle)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Utils.showToast(requireContext(), "Navigation failed: ${e.message}")
             }
         }
     }
@@ -68,8 +71,8 @@ class SignFragment : Fragment() {
     }
 
     private fun setStatusBarColor() {
-        activity?.window?.apply {
-            val statusBarColors = resources.getColor(R.color.yellow)
+        requireActivity().window?.apply {
+            val statusBarColors = ContextCompat.getColor(requireContext(), R.color.yellow)
             statusBarColor = statusBarColors
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                 decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
