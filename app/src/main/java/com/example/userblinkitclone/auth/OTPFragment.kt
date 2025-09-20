@@ -8,12 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.userblinkitclone.R
 import com.example.userblinkitclone.Utils
 import com.example.userblinkitclone.databinding.FragmentOTPBinding
+import com.example.userblinkitclone.models.Users
 import com.example.userblinkitclone.viewmodels.AuthViewModel
 import kotlinx.coroutines.launch
 
@@ -53,7 +53,18 @@ class OTPFragment : Fragment() {
     }
 
     private fun verifyOTP(otp: String) {
+        val user = Users(uid =  Utils.getCurrentUserId(), userPhoneNumber = userNumber, userAddress = null)
 
+        viewModel.signInWithPhoneAuthCredential(otp, userNumber, user)
+
+        lifecycleScope.launch {
+            viewModel.isSignedInSuccessfully.collect {
+                if (it){
+                    Utils.hideDialog()
+                    Utils.showToast(requireContext(), "Logged In...")
+                }
+            }
+        }
     }
 
     private fun sendOTP() {
