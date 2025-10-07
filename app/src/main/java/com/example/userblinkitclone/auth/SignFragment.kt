@@ -24,6 +24,16 @@ class SignFragment : Fragment() {
         setStatusBarColor()
         getUserNumber()
         onContinueClick()
+
+        // 👇 Step 3: Scroll input field into view when focused
+        binding.etUserInput.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                binding.root.post {
+                    // scroll the input field into view smoothly
+                    binding.root.scrollTo(0, binding.etUserInput.bottom)
+                }
+            }
+        }
         return binding.root
     }
 

@@ -78,16 +78,25 @@ class AuthViewModel : ViewModel() {
         PhoneAuthProvider.verifyPhoneNumber(options)
     }
 
-    fun signInWithPhoneAuthCredential(otp: String, userNumber: String, user: Users) {
+    fun signInWithPhoneAuthCredential(otp: String, userNumber: String) {
         val credential = PhoneAuthProvider.getCredential(verificationId.value.toString(), otp)
         Utils.getAuthInstance().signInWithCredential(credential)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    FirebaseDatabase.getInstance().getReference("AllUsers").child("Users").child(user.uid!!).setValue(user)
                     _isSignedInSuccessfully.value = true
                 } else {
-
+                    Log.e("AuthViewModel", "Sign in failed: ${task.exception?.message}", task.exception)
+                    _isSignedInSuccessfully.value = false
                 }
             }
+    }
+
+    fun createOrUpdateUser(user: Users) {
+        val uid = user.uid ?: return
+        FirebaseDatabase.getInstance()
+            .getReference("AllUsers")
+            .child("Users")
+            .child(uid)
+            .setValue(user)
     }
 }
