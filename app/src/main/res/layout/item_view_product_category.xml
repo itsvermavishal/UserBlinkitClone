@@ -24,6 +24,18 @@
             android:background="@drawable/bg_category"
             android:src="@drawable/vegetable"
             />
+        <TextView
+            android:id="@+id/tvCategoryTitle"
+            android:layout_width="78.0dp"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:layout_marginTop="6.50dp"
+            android:layout_gravity="center"
+            android:ellipsize="end"
+            android:text="Vegetables and Fruits"
+            android:textSize="14.30sp"
+            android:textColor="@color/black"
+            />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
