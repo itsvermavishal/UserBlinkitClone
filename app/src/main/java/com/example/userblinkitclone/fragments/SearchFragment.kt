@@ -77,7 +77,7 @@ class SearchFragment : Fragment() {
                     binding.rvProducts.visibility = View.VISIBLE
                     binding.tvText.visibility = View.GONE
                 }
-                adapterProduct = AdapterProduct()
+                adapterProduct = AdapterProduct(::onAddButtonClicked)
                 binding.rvProducts.adapter = adapterProduct
                 adapterProduct.differ.submitList(it)
                 adapterProduct.originalList = it as ArrayList<Product>
