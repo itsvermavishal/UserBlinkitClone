@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.DialogTitle
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -47,7 +48,13 @@ class HomeFragment : Fragment() {
             )
         }
 
-        binding.rvCategories.adapter = AdapterCategory(categoryList)
+        binding.rvCategories.adapter = AdapterCategory(categoryList, ::onCategoryIconClicked)
+    }
+
+    fun onCategoryIconClicked(category: Category){
+        val bundle = Bundle()
+        bundle.putString("category", category.title)
+        findNavController().navigate(R.id.action_homeFragment_to_categoryFragment, bundle)
     }
 
     private fun setStatusBarColor() {
