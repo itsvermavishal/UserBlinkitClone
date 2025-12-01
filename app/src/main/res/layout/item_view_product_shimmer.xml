@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:columnCount="2"
+    android:padding="6dp"
+    android:alignmentMode="alignMargins"
+    android:useDefaultMargins="true">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvProduct1"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_240sdp"
+        android:layout_columnWeight="1"
+        android:layout_weight="0.5"
+        android:background="@drawable/bg_stroke"
+        android:elevation="0dp"
+        android:orientation="vertical"
+        app:cardCornerRadius="14dp"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <com.denzcoskun.imageslider.ImageSlider
+                android:id="@+id/ivImageSlider1"
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+                android:background="#DDDDDD" />
+
+            <TextView
+                android:id="@+id/tvProductTitle1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="#DDDDDD"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvProductQuantity1"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:background="#DDDDDD"
+                android:maxLines="1"
+                android:textColor="@color/black"
+                android:textSize="15.00sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp">
+
+                    <TextView
+                        android:id="@+id/tvProductPrice1"
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:background="#DDDDDD"
+                        android:textColor="@color/black"
+                        android:textSize="16dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tvAdd1"
+                        android:layout_width="78.0dp"
+                        android:layout_height="wrap_content"
+                        android:background="#DDDDDD"
+                        android:gravity="center"
+                        android:padding="6dp"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvProduct2"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_240sdp"
+        android:layout_columnWeight="1"
+        android:layout_weight="0.5"
+        android:background="@drawable/bg_stroke"
+        android:elevation="0dp"
+        android:orientation="vertical"
+        app:cardCornerRadius="14dp"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <com.denzcoskun.imageslider.ImageSlider
+                android:id="@+id/ivImageSlider2"
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+                android:background="#DDDDDD" />
+
+            <TextView
+                android:id="@+id/tvProductTitle2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="#DDDDDD"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvProductQuantity2"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:background="#DDDDDD"
+                android:maxLines="1"
+                android:textColor="@color/black"
+                android:textSize="15.00sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp">
+
+                    <TextView
+                        android:id="@+id/tvProductPrice2"
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:background="#DDDDDD"
+                        android:textColor="@color/black"
+                        android:textSize="16dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tvAdd2"
+                        android:layout_width="78.0dp"
+                        android:layout_height="wrap_content"
+                        android:background="#DDDDDD"
+                        android:gravity="center"
+                        android:padding="6dp"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</GridLayout>

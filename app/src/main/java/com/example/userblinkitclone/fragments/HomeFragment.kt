@@ -1,12 +1,15 @@
-package com.example.userblinkitclone
+package com.example.userblinkitclone.fragments
 
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.example.userblinkitclone.Constants
+import com.example.userblinkitclone.R
 import com.example.userblinkitclone.adapters.AdapterCategory
 import com.example.userblinkitclone.databinding.FragmentHomeBinding
 import com.example.userblinkitclone.models.Category
@@ -21,7 +24,14 @@ class HomeFragment : Fragment() {
         binding = FragmentHomeBinding.inflate(layoutInflater)
         setStatusBarColor()
         setAllCategories()
+        navigatingToSearchFragment()
         return binding.root
+    }
+
+    private fun navigatingToSearchFragment() {
+        binding.searchCv.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_searchFragment)
+        }
     }
 
     private fun setAllCategories() {
@@ -29,7 +39,12 @@ class HomeFragment : Fragment() {
         val minSize = minOf(Constants.allProductCategory.size, Constants.allProductCategoryIcon.size)
 
         for (i in 0 until  minSize){
-            categoryList.add(Category(Constants.allProductCategory[i], Constants.allProductCategoryIcon[i]))
+            categoryList.add(
+                Category(
+                    Constants.allProductCategory[i],
+                    Constants.allProductCategoryIcon[i]
+                )
+            )
         }
 
         binding.rvCategories.adapter = AdapterCategory(categoryList)
