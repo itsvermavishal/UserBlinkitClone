@@ -17,7 +17,11 @@ import kotlin.collections.forEach
 import kotlin.collections.isNullOrEmpty
 import kotlin.toString
 
-class AdapterProduct(val onAddButtonClicked: (Product, ItemViewProductBinding) -> Unit) : RecyclerView.Adapter<AdapterProduct.ProductViewHolder>() , Filterable{
+class AdapterProduct(
+    val onAddButtonClicked: (Product, ItemViewProductBinding) -> Unit,
+    val onIncrementButtonClicked: (Product, ItemViewProductBinding) -> Unit,
+    val onDecrementButtonClicked: (Product, ItemViewProductBinding) -> Unit
+) : RecyclerView.Adapter<AdapterProduct.ProductViewHolder>() , Filterable{
     class ProductViewHolder(val binding: ItemViewProductBinding) : ViewHolder(binding.root) {
 
     }
@@ -81,6 +85,9 @@ class AdapterProduct(val onAddButtonClicked: (Product, ItemViewProductBinding) -
             tvProductPrice.text = "₹${product.productPrice ?: ""}"
 
             tvAdd.setOnClickListener { onAddButtonClicked (product, this) }
+            tvIncrementCount.setOnClickListener { onIncrementButtonClicked(product, this) }
+            tvDecrementCount.setOnClickListener { onDecrementButtonClicked(product, this) }
+
         }
 
     }

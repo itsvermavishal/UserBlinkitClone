@@ -70,7 +70,7 @@ class CategoryFragment : Fragment() {
                     binding.rvProducts.visibility = View.VISIBLE
                     binding.tvText.visibility = View.GONE
                 }
-                adapterProduct = AdapterProduct(::onAddButtonClicked)
+                adapterProduct = AdapterProduct(::onAddButtonClicked, ::onIncrementButtonClicked, ::onDecrementButtonClicked)
                 binding.rvProducts.adapter = adapterProduct
                 adapterProduct.differ.submitList(it)
                 binding.shimmerViewContainer.visibility = View.GONE
@@ -90,6 +90,37 @@ class CategoryFragment : Fragment() {
     private fun onAddButtonClicked(product: Product, productBinding: ItemViewProductBinding){
         productBinding.tvAdd.visibility = View.GONE
         productBinding.llProductCount.visibility = View.VISIBLE
+
+        //Step - 1
+        var itemCount = productBinding.tvProductCount.text.toString().toInt()
+        itemCount++
+        productBinding.tvProductCount.text = itemCount.toString()
+        cartListener?.showCartLayout(1)
+
+        //Step - 2
+
+    }
+
+    fun onIncrementButtonClicked(product: Product, productBinding: ItemViewProductBinding){
+        var itemCountInc = productBinding.tvProductCount.text.toString().toInt()
+        itemCountInc++
+        productBinding.tvProductCount.text = itemCountInc.toString()
+        cartListener?.showCartLayout(1)
+    }
+
+    fun onDecrementButtonClicked(product: Product, productBinding: ItemViewProductBinding){
+        var itemCountDec = productBinding.tvProductCount.text.toString().toInt()
+        itemCountDec--
+        if (itemCountDec > 0){
+            productBinding.tvProductCount.text = itemCountDec.toString()
+        }
+        else{
+            productBinding.tvAdd.visibility = View.VISIBLE
+            productBinding.llProductCount.visibility = View.GONE
+            productBinding.tvProductCount.text = "0"
+        }
+
+        cartListener?.showCartLayout(-1)
     }
 
     private fun setStatusBarColor() {

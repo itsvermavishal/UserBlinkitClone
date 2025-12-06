@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.userblinkitclone.R
 import com.example.userblinkitclone.adapters.AdapterProduct
 import com.example.userblinkitclone.databinding.FragmentSearchBinding
+import com.example.userblinkitclone.databinding.ItemViewProductBinding
 import com.example.userblinkitclone.models.Product
 import com.example.userblinkitclone.viewmodels.UserViewModel
 import kotlinx.coroutines.launch
@@ -77,13 +78,28 @@ class SearchFragment : Fragment() {
                     binding.rvProducts.visibility = View.VISIBLE
                     binding.tvText.visibility = View.GONE
                 }
-                adapterProduct = AdapterProduct(::onAddButtonClicked)
-                binding.rvProducts.adapter = adapterProduct
+//                adapterProduct = AdapterProduct(
+//                    ::onAddButtonClicked,
+//                    ::onIncrementButtonClicked,
+//                    ::onDecrementButtonClicked
+//                )
+                //binding.rvProducts.adapter = adapterProduct
                 adapterProduct.differ.submitList(it)
                 adapterProduct.originalList = it as ArrayList<Product>
                 binding.shimmerViewContainer.visibility = View.GONE
             }
         }
     }
+
+    private fun onAddButtonClicked(product: Product, binding: ItemViewProductBinding) {
+        // Example: You can update UI, add to cart, etc.
+        // Disable button after adding
+        binding.tvAdd.text = "Added"
+        binding.tvAdd.isEnabled = false
+
+        // Call ViewModel function if needed
+        // viewModel.addToCart(product)
+    }
+
 
 }
