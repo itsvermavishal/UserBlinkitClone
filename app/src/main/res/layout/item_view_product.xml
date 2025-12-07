@@ -109,7 +109,7 @@
                             android:gravity="center"
                             android:text="-"
                             android:textColor="#FFFFFF"
-                            android:textSize="19.50dp"/>
+                            android:textSize="15.50dp"/>
 
                         <TextView
                             android:id="@+id/tvProductCount"
@@ -117,9 +117,9 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="-"
+                            android:text="0"
                             android:textColor="#FFFFFF"
-                            android:textSize="19.50dp"/>
+                            android:textSize="15.50dp"/>
 
                         <TextView
                             android:id="@+id/tvIncrementCount"
@@ -127,9 +127,9 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="-"
+                            android:text="+"
                             android:textColor="#FFFFFF"
-                            android:textSize="19.50dp"/>
+                            android:textSize="15.50dp"/>
 
                     </LinearLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>

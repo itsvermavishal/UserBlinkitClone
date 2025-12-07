@@ -99,16 +99,22 @@ class CategoryFragment : Fragment() {
 
         //Step - 2
 
+        cartListener?.savingCartItemCount(1)
+
     }
 
-    fun onIncrementButtonClicked(product: Product, productBinding: ItemViewProductBinding){
+    private fun onIncrementButtonClicked(product: Product, productBinding: ItemViewProductBinding){
         var itemCountInc = productBinding.tvProductCount.text.toString().toInt()
         itemCountInc++
         productBinding.tvProductCount.text = itemCountInc.toString()
         cartListener?.showCartLayout(1)
+
+        //Step - 2
+
+        cartListener?.savingCartItemCount(1)
     }
 
-    fun onDecrementButtonClicked(product: Product, productBinding: ItemViewProductBinding){
+    private fun onDecrementButtonClicked(product: Product, productBinding: ItemViewProductBinding){
         var itemCountDec = productBinding.tvProductCount.text.toString().toInt()
         itemCountDec--
         if (itemCountDec > 0){
@@ -121,11 +127,15 @@ class CategoryFragment : Fragment() {
         }
 
         cartListener?.showCartLayout(-1)
+
+        //Step - 2
+
+        cartListener?.savingCartItemCount(-1)
     }
 
     private fun setStatusBarColor() {
-        requireActivity().window?.apply {
-            val statusBarColors = ContextCompat.getColor(requireContext(), R.color.yellow)
+        activity?.window?.apply {
+            val statusBarColors = ContextCompat.getColor(requireContext(), R.color.orange)
             statusBarColor = statusBarColors
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                 decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR

@@ -1,6 +1,10 @@
 package com.example.userblinkitclone.viewmodels
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import android.content.Context.MODE_PRIVATE
+import android.content.SharedPreferences
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
 import com.example.userblinkitclone.models.Product
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -10,8 +14,8 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 
-class UserViewModel : ViewModel(){
-
+class UserViewModel(application: Application) : AndroidViewModel(application){
+    val sharedPreferences : SharedPreferences = application.getSharedPreferences("My_Pref", MODE_PRIVATE)
     fun fetchAllProducts(): Flow<java.util.ArrayList<Product>> = callbackFlow {
         val db = FirebaseDatabase.getInstance().getReference("Admins").child("AllProducts")
 
@@ -59,5 +63,15 @@ class UserViewModel : ViewModel(){
         awaitClose {
             db.removeEventListener(eventListener)
         }
+    }
+
+    fun savingCartItemCount(itemCount : Int){
+        sharedPreferences.edit().putInt("itemCount", itemCount).apply()
+    }
+
+    fun fetchTotalCartItemCount() : MutableLiveData<Int>{
+        val totalItemCount = MutableLiveData<Int>()
+        totalItemCount.value = sharedPreferences.getInt("itemCount", 0)
+        return totalItemCount
     }
 }
