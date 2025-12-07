@@ -1,6 +1,8 @@
 package com.example.userblinkitclone.activity
 
 import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -10,19 +12,48 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.viewModels
 import com.example.userblinkitclone.CartListener
 import com.example.userblinkitclone.R
+import com.example.userblinkitclone.adapters.AdapterCartProducts
 import com.example.userblinkitclone.databinding.ActivityUsersMainBinding
+import com.example.userblinkitclone.databinding.BsCartProductsBinding
+import com.example.userblinkitclone.roomdb.CartProductsTable
 import com.example.userblinkitclone.viewmodels.UserViewModel
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlin.getValue
 
 class UsersMainActivity : AppCompatActivity() , CartListener{
     private lateinit var binding: ActivityUsersMainBinding
     private val viewModel : UserViewModel by viewModels()
+    private lateinit var cartProductList: List<CartProductsTable>
+    private lateinit var adapterCartProducts: AdapterCartProducts
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityUsersMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        getAllCartProducts()
         getTotalItemCountInCart()
+        onCartClicked()
+    }
+
+    private fun getAllCartProducts(){
+        viewModel.getAll().observe(this){
+            cartProductList = it
+        }
+    }
+
+    private fun onCartClicked() {
+        binding.llcart.setOnClickListener {
+            val bsCartProductsBinding = BsCartProductsBinding.inflate(LayoutInflater.from(this))
+
+            val bottomSheetDialog = BottomSheetDialog(this)
+            bottomSheetDialog.setContentView(bsCartProductsBinding.root)
+
+            bsCartProductsBinding.tvNumberOfProductCount.text = binding.tvNumberOfProductCount.text
+            adapterCartProducts = AdapterCartProducts()
+            bsCartProductsBinding.rvproductsItems.adapter = adapterCartProducts
+            adapterCartProducts.differ.submitList(cartProductList)
+
+            bottomSheetDialog.show()
+        }
 
     }
 
