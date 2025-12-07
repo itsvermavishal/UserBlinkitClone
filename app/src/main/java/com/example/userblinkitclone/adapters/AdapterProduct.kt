@@ -1,6 +1,7 @@
 package com.example.userblinkitclone.adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
@@ -82,7 +83,17 @@ class AdapterProduct(
             tvProductTitle.text = product.productTitle ?: ""
             val quantity = "${product.productQuantity ?: ""}${product.productUnit ?: ""}"
             tvProductQuantity.text = quantity
-            tvProductPrice.text = "₹${product.productPrice ?: ""}"
+            tvProductPrice.text = "₹" + product.productPrice
+
+            if (product.itemCount!! > 0){
+                tvProductCount.text = product.itemCount.toString()
+                tvAdd.visibility = View.GONE
+                llProductCount.visibility = View.VISIBLE
+                }
+            else{
+                tvAdd.visibility = View.VISIBLE
+                llProductCount.visibility = View.GONE
+            }
 
             tvAdd.setOnClickListener { onAddButtonClicked (product, this) }
             tvIncrementCount.setOnClickListener { onIncrementButtonClicked(product, this) }

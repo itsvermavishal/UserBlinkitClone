@@ -5,6 +5,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,10 +16,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.userblinkitclone.CartListener
 import com.example.userblinkitclone.R
+import com.example.userblinkitclone.Utils
 import com.example.userblinkitclone.adapters.AdapterProduct
 import com.example.userblinkitclone.databinding.FragmentSearchBinding
 import com.example.userblinkitclone.databinding.ItemViewProductBinding
 import com.example.userblinkitclone.models.Product
+import com.example.userblinkitclone.roomdb.CartProductsTable
 import com.example.userblinkitclone.viewmodels.UserViewModel
 import kotlinx.coroutines.launch
 
@@ -108,27 +111,56 @@ class SearchFragment : Fragment() {
         cartListener?.showCartLayout(1)
 
         //Step - 2
-
-        cartListener?.savingCartItemCount(1)
+        product.itemCount = itemCount
+        lifecycleScope.launch {
+            cartListener?.savingCartItemCount(1)
+            saveProductInRoomDb(product)
+            viewModel.updateItemCount(product, itemCount)
+        }
 
     }
 
-    fun onIncrementButtonClicked(product: Product, productBinding: ItemViewProductBinding){
+    private fun onIncrementButtonClicked(product: Product, productBinding: ItemViewProductBinding){
         var itemCountInc = productBinding.tvProductCount.text.toString().toInt()
         itemCountInc++
-        productBinding.tvProductCount.text = itemCountInc.toString()
-        cartListener?.showCartLayout(1)
 
-        cartListener?.savingCartItemCount(1)
+        if (product.productStock!! + 1 > itemCountInc){
+            productBinding.tvProductCount.text = itemCountInc.toString()
+            cartListener?.showCartLayout(1)
+
+            //Step - 2
+
+            product.itemCount = itemCountInc
+            lifecycleScope.launch {
+                cartListener?.savingCartItemCount(1)
+                saveProductInRoomDb(product)
+                viewModel.updateItemCount(product, itemCountInc)
+            }
+        }
+        else{
+            Utils.showToast(requireContext(), "Out of Stock")
+        }
     }
 
-    fun onDecrementButtonClicked(product: Product, productBinding: ItemViewProductBinding){
+    private fun onDecrementButtonClicked(product: Product, productBinding: ItemViewProductBinding){
         var itemCountDec = productBinding.tvProductCount.text.toString().toInt()
         itemCountDec--
+
+        product.itemCount = itemCountDec
+        lifecycleScope.launch {
+            cartListener?.savingCartItemCount(-1)
+            saveProductInRoomDb(product)
+            viewModel.updateItemCount(product, itemCountDec)
+        }
+
         if (itemCountDec > 0){
             productBinding.tvProductCount.text = itemCountDec.toString()
         }
         else{
+            lifecycleScope.launch {
+                viewModel.deleteCartProduct(product.productRandomId!!)
+            }
+            Log.d("VV", product.productRandomId!!)
             productBinding.tvAdd.visibility = View.VISIBLE
             productBinding.llProductCount.visibility = View.GONE
             productBinding.tvProductCount.text = "0"
@@ -136,8 +168,49 @@ class SearchFragment : Fragment() {
 
         cartListener?.showCartLayout(-1)
 
-        cartListener?.savingCartItemCount(-1)
+        //Step - 2
+
+
     }
+
+    private fun saveProductInRoomDb(product: Product) {
+
+        val id = product.productRandomId
+        if (id.isNullOrEmpty()) {
+            Log.e("Cart", "❌ Cannot save: productRandomId is NULL")
+            return
+        }
+
+        val quantityText = buildString {
+            product.productQuantity?.let { append(it.toString()) }
+            if (!product.productUnit.isNullOrBlank()) {
+                append(product.productUnit)
+            }
+        }
+
+        val priceText = product.productPrice?.let { "₹$it" } ?: "₹0"
+
+        val imageUrl = product.productImageUris?.firstOrNull() ?: ""   // SAFE
+
+        val count = product.itemCount ?: 1
+
+        val cartProduct = CartProductsTable(
+            productId = id,
+            productTitle = product.productTitle ?: "",
+            productQuantity = quantityText,
+            productPrice = priceText,
+            productCount = count,
+            productStock = product.productStock ?: 0,
+            productImage = imageUrl,      // SAFE
+            productCategory = product.productCategory ?: "",
+            adminUID = product.adminUID ?: ""
+        )
+
+        lifecycleScope.launch {
+            viewModel.insertCartProduct(cartProduct)
+        }
+    }
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

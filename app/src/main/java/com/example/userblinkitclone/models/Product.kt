@@ -1,7 +1,5 @@
 package com.example.userblinkitclone.models
 
-import java.util.UUID
-
 data class Product(
     var productRandomId : String? = null,
     var productTitle : String ?= null,
@@ -11,7 +9,7 @@ data class Product(
     var productStock : Int ?= null,
     var productCategory : String ?= null,
     var productType : String ?= null,
-    var itemCount : Int ?= null,
+    var itemCount : Int = 0,
     var adminUID : String ?= null,
     var productImageUris : ArrayList<String?>?= null
 )

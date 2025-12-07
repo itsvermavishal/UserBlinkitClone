@@ -2,22 +2,25 @@ package com.example.userblinkitclone.fragments
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.DialogTitle
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.userblinkitclone.Constants
 import com.example.userblinkitclone.R
 import com.example.userblinkitclone.adapters.AdapterCategory
 import com.example.userblinkitclone.databinding.FragmentHomeBinding
 import com.example.userblinkitclone.models.Category
+import com.example.userblinkitclone.viewmodels.UserViewModel
 
 class HomeFragment : Fragment() {
-
     private lateinit var binding : FragmentHomeBinding
+    private val viewModel: UserViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -26,7 +29,17 @@ class HomeFragment : Fragment() {
         setStatusBarColor()
         setAllCategories()
         navigatingToSearchFragment()
+        get()
         return binding.root
+    }
+
+    private fun get(){
+        viewModel.getAll().observe(viewLifecycleOwner){
+            for (i in it){
+                Log.d("vvv", i.productTitle.toString())
+                Log.d("vvv", i.productCount.toString())
+            }
+        }
     }
 
     private fun navigatingToSearchFragment() {
