@@ -1,5 +1,6 @@
 package com.example.userblinkitclone.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -32,6 +33,13 @@ class UsersMainActivity : AppCompatActivity() , CartListener{
         getAllCartProducts()
         getTotalItemCountInCart()
         onCartClicked()
+        onNextButtonClicked()
+    }
+
+    private fun onNextButtonClicked() {
+        binding.btnNext.setOnClickListener {
+            startActivity(Intent(this, OrderPlaceActivity::class.java))
+        }
     }
 
     private fun getAllCartProducts(){
@@ -48,6 +56,9 @@ class UsersMainActivity : AppCompatActivity() , CartListener{
             bottomSheetDialog.setContentView(bsCartProductsBinding.root)
 
             bsCartProductsBinding.tvNumberOfProductCount.text = binding.tvNumberOfProductCount.text
+            bsCartProductsBinding.btnNext.setOnClickListener {
+                startActivity(Intent(this, OrderPlaceActivity::class.java))
+            }
             adapterCartProducts = AdapterCartProducts()
             bsCartProductsBinding.rvproductsItems.adapter = adapterCartProducts
             adapterCartProducts.differ.submitList(cartProductList)

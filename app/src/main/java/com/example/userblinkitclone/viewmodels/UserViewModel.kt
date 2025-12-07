@@ -3,10 +3,13 @@ package com.example.userblinkitclone.viewmodels
 import android.app.Application
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import android.location.Address
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.userblinkitclone.Utils
 import com.example.userblinkitclone.models.Product
+import com.example.userblinkitclone.models.Users
 import com.example.userblinkitclone.roomdb.CartProductsTable
 import com.example.userblinkitclone.roomdb.CartProductsDao
 import com.example.userblinkitclone.roomdb.CartProductsDatabase
@@ -97,6 +100,10 @@ class UserViewModel(application: Application) : AndroidViewModel(application){
         FirebaseDatabase.getInstance().getReference("Admins").child("ProductType/${product.productType}/${product.productRandomId}").child("itemCount").setValue(itemCount)
     }
 
+    fun saveUserAddress(address: String){
+        FirebaseDatabase.getInstance().getReference("AllUsers").child("Users").child(Utils.getCurrentUserId()!!).child("userAddress").setValue(address)
+    }
+
     //Shared Preferences
     fun savingCartItemCount(itemCount : Int){
         sharedPreferences.edit().putInt("itemCount", itemCount).apply()
@@ -106,5 +113,15 @@ class UserViewModel(application: Application) : AndroidViewModel(application){
         val totalItemCount = MutableLiveData<Int>()
         totalItemCount.value = sharedPreferences.getInt("itemCount", 0)
         return totalItemCount
+    }
+
+    fun saveAddressStatus(){
+        sharedPreferences.edit().putBoolean("addressStatus", true).apply()
+    }
+
+    fun getAddressStatus() : MutableLiveData<Boolean>{
+        val addressStatus = MutableLiveData<Boolean>()
+        addressStatus.value = sharedPreferences.getBoolean("addressStatus", false)
+        return addressStatus
     }
 }

@@ -63,7 +63,7 @@ class OTPFragment : Fragment() {
             viewModel.isSignedInSuccessfully.collect {success ->
                 if (success){
                     val uid = Utils.getCurrentUserId()
-                    val user = Users(uid = uid, userPhoneNumber = userNumber, userAddress = null)
+                    val user = Users(uid = uid, userPhoneNumber = userNumber, userAddress = " ")
 
                     // Save user in Firebase
                     Utils.showDialog(requireContext(), "Saving user info...")
