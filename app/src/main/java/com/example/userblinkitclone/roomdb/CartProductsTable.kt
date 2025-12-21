@@ -15,5 +15,6 @@ data class CartProductsTable(
     var productStock : Int ?= null,
     var productImage : String ?= null,
     var productCategory : String ?= null,
-    var adminUID : String ?= null
+    var adminUID : String ?= null,
+    var productType : String ?= null
 )

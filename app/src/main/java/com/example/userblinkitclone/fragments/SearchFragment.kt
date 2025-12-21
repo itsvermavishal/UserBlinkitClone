@@ -203,7 +203,8 @@ class SearchFragment : Fragment() {
             productStock = product.productStock ?: 0,
             productImage = imageUrl,      // SAFE
             productCategory = product.productCategory ?: "",
-            adminUID = product.adminUID ?: ""
+            adminUID = product.adminUID ?: "",
+            productType = product.productType ?: ""
         )
 
         lifecycleScope.launch {

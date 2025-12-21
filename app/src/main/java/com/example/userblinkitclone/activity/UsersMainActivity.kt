@@ -101,4 +101,9 @@ class UsersMainActivity : AppCompatActivity() , CartListener{
             viewModel.savingCartItemCount(it + itemCount)
         }
     }
+
+    override fun hideCartlayout() {
+        binding.llcart.visibility = View.GONE
+        binding.tvNumberOfProductCount.text = "0"
+    }
 }

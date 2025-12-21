@@ -3,22 +3,24 @@ package com.example.userblinkitclone.viewmodels
 import android.app.Application
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
-import android.location.Address
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.userblinkitclone.Constants
 import com.example.userblinkitclone.Utils
+import com.example.userblinkitclone.api.ApiUtilities
+import com.example.userblinkitclone.models.Orders
 import com.example.userblinkitclone.models.Product
-import com.example.userblinkitclone.models.Users
-import com.example.userblinkitclone.roomdb.CartProductsTable
 import com.example.userblinkitclone.roomdb.CartProductsDao
 import com.example.userblinkitclone.roomdb.CartProductsDatabase
+import com.example.userblinkitclone.roomdb.CartProductsTable
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.callbackFlow
 
 class UserViewModel(application: Application) : AndroidViewModel(application){
@@ -27,6 +29,9 @@ class UserViewModel(application: Application) : AndroidViewModel(application){
     val sharedPreferences : SharedPreferences = application.getSharedPreferences("My_Pref", MODE_PRIVATE)
     val cartProductsDao : CartProductsDao = CartProductsDatabase.getDatabaseInstance(application).cartProductsDao()
 
+    private val _paymentStatus = MutableStateFlow<Boolean>(false)
+    val paymentStatus = _paymentStatus
+
     //Room DB
     suspend fun insertCartProduct(products: CartProductsTable){
         cartProductsDao.insertCartProduct(products)
@@ -34,6 +39,10 @@ class UserViewModel(application: Application) : AndroidViewModel(application){
 
     fun getAll() : LiveData<List<CartProductsTable>>{
         return cartProductsDao.getAllCartProducts()
+    }
+
+    suspend fun deleteCartProducts(){
+        cartProductsDao.deleteCartProducts()
     }
 
     suspend fun updateCartProduct(products: CartProductsTable){
@@ -100,10 +109,46 @@ class UserViewModel(application: Application) : AndroidViewModel(application){
         FirebaseDatabase.getInstance().getReference("Admins").child("ProductType/${product.productType}/${product.productRandomId}").child("itemCount").setValue(itemCount)
     }
 
+    fun saveProductsAfterOrder(stock : Int, product: CartProductsTable){
+        FirebaseDatabase.getInstance().getReference("Admins").child("AllProducts/${product.productId}").child("itemCount").setValue(0)
+        FirebaseDatabase.getInstance().getReference("Admins").child("ProductCategory/${product.productCategory}/${product.productId}").child("itemCount").setValue(0)
+       FirebaseDatabase.getInstance().getReference("Admins").child("ProductType/${product.productType}/${product.productId}").child("itemCount").setValue(0)
+
+        FirebaseDatabase.getInstance().getReference("Admins").child("AllProducts/${product.productId}").child("productStock").setValue(stock)
+        FirebaseDatabase.getInstance().getReference("Admins").child("ProductCategory/${product.productCategory}/${product.productId}").child("productStock").setValue(stock)
+        FirebaseDatabase.getInstance().getReference("Admins").child("ProductType/${product.productType}/${product.productId}").child("productStock").setValue(stock)
+
+
+    }
+
     fun saveUserAddress(address: String){
         FirebaseDatabase.getInstance().getReference("AllUsers").child("Users").child(Utils.getCurrentUserId()!!).child("userAddress").setValue(address)
     }
 
+    fun getUserAddress(callback: (String?) -> Unit){
+        val db = FirebaseDatabase.getInstance().getReference("AllUsers").child("Users").child(Utils.getCurrentUserId()!!).child("userAddress")
+        db.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()){
+                    val address = snapshot.getValue(String::class.java)
+                    callback(address)
+                }
+                else{
+                    callback(null)
+                }
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+                callback(null)
+            }
+
+        })
+    }
+
+    fun saveOderproducts(orders: Orders){
+        FirebaseDatabase.getInstance().getReference("Admins").child("Orders").child(orders.orderId!!).setValue(orders)
+
+    }
     //Shared Preferences
     fun savingCartItemCount(itemCount : Int){
         sharedPreferences.edit().putInt("itemCount", itemCount).apply()
@@ -123,5 +168,16 @@ class UserViewModel(application: Application) : AndroidViewModel(application){
         val addressStatus = MutableLiveData<Boolean>()
         addressStatus.value = sharedPreferences.getBoolean("addressStatus", false)
         return addressStatus
+    }
+
+    //Retrofit
+    suspend fun checkPayment(headers: Map<String, String>){
+        val res = ApiUtilities.statusApi.getPaymentStatus(headers, Constants.MERCHANT_ID, Constants.merchantTransactionId)
+        if (res.body() != null && res.body()!!.success){
+            _paymentStatus.value = true
+        }
+        else{
+            _paymentStatus.value = false
+        }
     }
 }

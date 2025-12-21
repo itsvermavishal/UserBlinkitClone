@@ -121,4 +121,11 @@ dependencies {
     //glide
     implementation("com.github.bumptech.glide:glide:4.16.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.15.0")
+
+    //Phonepe
+    implementation("phonepe.intentsdk.android.release:IntentSDK:5.3.0")
+
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 }
