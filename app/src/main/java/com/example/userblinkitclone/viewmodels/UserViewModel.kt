@@ -78,6 +78,33 @@ class UserViewModel(application: Application) : AndroidViewModel(application){
         }
     }
 
+    fun getAllProducts(): Flow<List<Orders>> = callbackFlow {
+        val db = FirebaseDatabase.getInstance().getReference("Admins").child("Orders").orderByChild("orderStatus")
+
+        val eventListener = object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val orderList = ArrayList<Orders>()
+                for (orders in snapshot.children){
+                    val order = orders.getValue(Orders::class.java)
+                    if (order?.orderingUserId == Utils.getCurrentUserId()){
+                        orderList.add(order!!)
+                    }
+                }
+                trySend(orderList).isSuccess
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        }
+        db.addValueEventListener(eventListener)
+
+        awaitClose {
+            db.removeEventListener(eventListener)
+        }
+    }
+
     fun getCategoryProduct(category: String) : Flow<List<Product>> = callbackFlow{
         val db =FirebaseDatabase.getInstance().getReference("Admins").child("ProductCategory/${category}")
 
@@ -98,6 +125,25 @@ class UserViewModel(application: Application) : AndroidViewModel(application){
         }
         db.addValueEventListener(eventListener)
 
+        awaitClose {
+            db.removeEventListener(eventListener)
+        }
+    }
+
+    fun getOrderdProducts(orderId : String): Flow<List<CartProductsTable>> = callbackFlow{
+        val db = FirebaseDatabase.getInstance().getReference("Admins").child("Orders").child(orderId)
+        val eventListener = object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val order = snapshot.getValue(Orders::class.java)
+                trySend(order?.orderList!!)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        }
+        db.addValueEventListener(eventListener)
         awaitClose {
             db.removeEventListener(eventListener)
         }

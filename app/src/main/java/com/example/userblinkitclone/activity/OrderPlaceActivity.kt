@@ -134,7 +134,7 @@ class OrderPlaceActivity : AppCompatActivity() {
                     Utils.showToast(this@OrderPlaceActivity, "Payment Successful")
                     // order save, delete products
                     saveOrder()
-                    deleteCartProducts()
+                    viewModel.deleteCartProducts()
                     viewModel.savingCartItemCount(0)
                     cartListener?.hideCartlayout()
                     Utils.hideDialog()
@@ -148,9 +148,6 @@ class OrderPlaceActivity : AppCompatActivity() {
         }
     }
 
-    private fun deleteCartProducts(){
-        viewModel.deleteCartProducts()
-    }
 
     private fun saveOrder(){
         viewModel.getAll().observe(this) { cartProductsList ->

@@ -29,18 +29,16 @@ class HomeFragment : Fragment() {
         setStatusBarColor()
         setAllCategories()
         navigatingToSearchFragment()
-        get()
+        onProfileClicked()
         return binding.root
     }
 
-    private fun get(){
-        viewModel.getAll().observe(viewLifecycleOwner){
-            for (i in it){
-                Log.d("vvv", i.productTitle.toString())
-                Log.d("vvv", i.productCount.toString())
-            }
+    private fun onProfileClicked() {
+        binding.ivProfile.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
         }
     }
+
 
     private fun navigatingToSearchFragment() {
         binding.searchCv.setOnClickListener {
