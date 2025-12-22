@@ -13,6 +13,7 @@ import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import java.util.concurrent.TimeUnit
@@ -78,17 +79,20 @@ class AuthViewModel : ViewModel() {
         PhoneAuthProvider.verifyPhoneNumber(options)
     }
 
-    fun signInWithPhoneAuthCredential(otp: String, userNumber: String) {
+    fun signInWithPhoneAuthCredential(otp: String, userNumber: String, users: Users) {
         val credential = PhoneAuthProvider.getCredential(verificationId.value.toString(), otp)
-        Utils.getAuthInstance().signInWithCredential(credential)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    _isSignedInSuccessfully.value = true
-                } else {
-                    Log.e("AuthViewModel", "Sign in failed: ${task.exception?.message}", task.exception)
-                    _isSignedInSuccessfully.value = false
+        FirebaseMessaging.getInstance().token.addOnCompleteListener {
+            users.userToken = it.result
+            Utils.getAuthInstance().signInWithCredential(credential)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        _isSignedInSuccessfully.value = true
+                    } else {
+                        Log.e("AuthViewModel", "Sign in failed: ${task.exception?.message}", task.exception)
+                        _isSignedInSuccessfully.value = false
+                    }
                 }
-            }
+        }
     }
 
     fun createOrUpdateUser(user: Users) {

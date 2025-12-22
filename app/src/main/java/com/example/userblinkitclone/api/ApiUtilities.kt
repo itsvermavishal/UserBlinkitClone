@@ -12,4 +12,12 @@ object ApiUtilities {
             .build()
             .create(ApiInterface::class.java)
     }
+
+    val notificationApi : ApiInterface by lazy {
+        Retrofit.Builder()
+            .baseUrl("https://fcm.googleapis.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ApiInterface::class.java)
+    }
 }

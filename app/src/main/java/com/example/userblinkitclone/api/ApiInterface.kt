@@ -1,9 +1,14 @@
 package com.example.userblinkitclone.api
 
 import com.example.userblinkitclone.models.CheckStatus
+import com.example.userblinkitclone.models.Notification
+import retrofit2.Call
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.HeaderMap
+import retrofit2.http.Headers
+import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface ApiInterface {
@@ -14,5 +19,13 @@ interface ApiInterface {
         @Path("merchantId") merchantId: String,
         @Path("transactionId") transactionId: String
     ) : Response<CheckStatus>
+
+    @Headers(
+        "Content-Type: application/json",
+        "Authorization: key="
+    )
+
+    @POST("fcm/send")
+    fun sendNotification(@Body notification: Notification) : Call<Notification>
 
 }

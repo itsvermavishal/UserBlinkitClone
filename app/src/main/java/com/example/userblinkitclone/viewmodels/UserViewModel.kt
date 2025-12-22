@@ -3,12 +3,15 @@ package com.example.userblinkitclone.viewmodels
 import android.app.Application
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.userblinkitclone.Constants
 import com.example.userblinkitclone.Utils
 import com.example.userblinkitclone.api.ApiUtilities
+import com.example.userblinkitclone.models.Notification
+import com.example.userblinkitclone.models.NotificationData
 import com.example.userblinkitclone.models.Orders
 import com.example.userblinkitclone.models.Product
 import com.example.userblinkitclone.roomdb.CartProductsDao
@@ -22,6 +25,9 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.callbackFlow
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class UserViewModel(application: Application) : AndroidViewModel(application){
 
@@ -224,6 +230,32 @@ class UserViewModel(application: Application) : AndroidViewModel(application){
         }
         else{
             _paymentStatus.value = false
+        }
+    }
+
+    suspend fun sendNotification(adminUID: String, title: String, message: String){
+        val getToken = FirebaseDatabase.getInstance().getReference("Admins").child("AdminInfo").child(adminUID).child("userToken").get()
+        getToken.addOnSuccessListener { task ->
+            val token = task.getValue(String::class.java)
+            val notification = Notification(token, NotificationData(title, message))
+            ApiUtilities.notificationApi.sendNotification(notification)
+                .enqueue(object : Callback<Notification> {
+                    override fun onResponse(
+                        call: Call<Notification?>,
+                        response: Response<Notification?>
+                    ) {
+                        if (response.isSuccessful){
+                            Log.d("GGG", "Notification sent")
+                        }
+                    }
+
+                    override fun onFailure(
+                        call: Call<Notification?>,
+                        t: Throwable
+                    ) {
+                        TODO("Not yet implemented")
+                    }
+                })
         }
     }
 }

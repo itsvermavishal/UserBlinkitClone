@@ -159,6 +159,10 @@ class OrderPlaceActivity : AppCompatActivity() {
                         orderingUserId = Utils.getCurrentUserId()
                     )
                     viewModel.saveOderproducts(order)
+                    // Notification
+                    lifecycleScope.launch {
+                        viewModel.sendNotification(cartProductsList[0].adminUID!!, "New Order", "Order Has been Placed")
+                    }
                 }
                 for (products in cartProductsList){
                     val count = products.productCount
