@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.userblinkitclone.Constants
 import com.example.userblinkitclone.Utils
 import com.example.userblinkitclone.api.ApiUtilities
+import com.example.userblinkitclone.models.Bestseller
 import com.example.userblinkitclone.models.Notification
 import com.example.userblinkitclone.models.NotificationData
 import com.example.userblinkitclone.models.Orders
@@ -214,6 +215,38 @@ class UserViewModel(application: Application) : AndroidViewModel(application){
 
     fun saveAddressStatus(){
         sharedPreferences.edit().putBoolean("addressStatus", true).apply()
+    }
+
+    fun fetchProductTypes() : Flow<List<Bestseller>> = callbackFlow {
+        val db = FirebaseDatabase.getInstance().getReference("Admins/ProductType")
+
+        val eventListener = object : ValueEventListener{
+            override fun onDataChange(snapshot : DataSnapshot) {
+                val productTypeList = ArrayList<Bestseller>()
+                for (productType in snapshot.children){
+                    val productTypeName = productType.key
+                    val productList = ArrayList<Product>()
+                    for (products in productType.children){
+                        val product = products.getValue(Product::class.java)
+                        productList.add(product!!)
+                    }
+                    val bestseller = Bestseller(productType = productTypeName, products = productList)
+                    productTypeList.add(bestseller)
+                }
+                trySend(productTypeList)
+
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        }
+
+        db.addValueEventListener(eventListener)
+        awaitClose {
+            db.removeEventListener(eventListener)
+        }
     }
 
     fun getAddressStatus() : MutableLiveData<Boolean>{

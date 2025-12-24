@@ -82,14 +82,38 @@
                     android:layout_height="wrap_content" />
             </LinearLayout>
 
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmer_view_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+
+                    <include layout="@layout/item_view_bestseller_shimmer"/>
+                    <include layout="@layout/item_view_bestseller_shimmer"/>
+                    <include layout="@layout/item_view_bestseller_shimmer"/>
+                    <include layout="@layout/item_view_bestseller_shimmer"/>
+                    <include layout="@layout/item_view_bestseller_shimmer"/>
+                    <include layout="@layout/item_view_bestseller_shimmer"/>
+
+                </LinearLayout>
+
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvBestsellers"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/_160sdp"
                 android:layout_marginHorizontal="@dimen/_6sdp"
                 android:orientation="horizontal"
                 android:nestedScrollingEnabled="false"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                />
 
             <!-- Categories -->
             <TextView
@@ -105,6 +129,8 @@
                 android:id="@+id/rvCategories"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="6.50dp"
+                android:layout_gravity="center"
                 android:nestedScrollingEnabled="false"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 app:spanCount="4" />
