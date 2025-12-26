@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.example.userblinkitclone.R
-import com.example.userblinkitclone.Utils
+import com.example.userblinkitclone.utils.Utils
 import com.example.userblinkitclone.databinding.FragmentSignBinding
 
 class SignFragment : Fragment() {

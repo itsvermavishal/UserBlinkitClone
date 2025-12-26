@@ -7,8 +7,8 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.userblinkitclone.Constants
-import com.example.userblinkitclone.Utils
+import com.example.userblinkitclone.utils.Constants
+import com.example.userblinkitclone.utils.Utils
 import com.example.userblinkitclone.api.ApiUtilities
 import com.example.userblinkitclone.models.Bestseller
 import com.example.userblinkitclone.models.Notification
@@ -18,6 +18,7 @@ import com.example.userblinkitclone.models.Product
 import com.example.userblinkitclone.roomdb.CartProductsDao
 import com.example.userblinkitclone.roomdb.CartProductsDatabase
 import com.example.userblinkitclone.roomdb.CartProductsTable
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -196,6 +197,14 @@ class UserViewModel(application: Application) : AndroidViewModel(application){
             }
 
         })
+    }
+
+    fun saveAddress(address: String){
+        FirebaseDatabase.getInstance().getReference("AllUsers").child("Users").child(Utils.getCurrentUserId()!!).child("userAddress").setValue(address)
+    }
+
+    fun logOutUser(){
+        FirebaseAuth.getInstance().signOut()
     }
 
     fun saveOderproducts(orders: Orders){

@@ -3,7 +3,7 @@ package com.example.userblinkitclone.viewmodels
 import android.app.Activity
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.example.userblinkitclone.Utils
+import com.example.userblinkitclone.utils.Utils
 import com.example.userblinkitclone.models.Users
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException

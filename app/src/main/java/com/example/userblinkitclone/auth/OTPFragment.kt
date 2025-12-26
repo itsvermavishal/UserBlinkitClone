@@ -12,7 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.userblinkitclone.R
-import com.example.userblinkitclone.Utils
+import com.example.userblinkitclone.utils.Utils
 import com.example.userblinkitclone.activity.UsersMainActivity
 import com.example.userblinkitclone.databinding.FragmentOTPBinding
 import com.example.userblinkitclone.models.Users

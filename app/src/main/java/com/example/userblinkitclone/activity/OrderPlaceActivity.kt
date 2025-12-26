@@ -13,10 +13,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import com.example.userblinkitclone.CartListener
-import com.example.userblinkitclone.Constants
+import com.example.userblinkitclone.utils.CartListener
+import com.example.userblinkitclone.utils.Constants
 import com.example.userblinkitclone.R
-import com.example.userblinkitclone.Utils
+import com.example.userblinkitclone.utils.Utils
 import com.example.userblinkitclone.adapters.AdapterCartProducts
 import com.example.userblinkitclone.databinding.ActivityOrderPlaceBinding
 import com.example.userblinkitclone.databinding.AddressLayoutBinding

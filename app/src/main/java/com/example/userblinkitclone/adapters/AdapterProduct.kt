@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.denzcoskun.imageslider.models.SlideModel
-import com.example.userblinkitclone.FilteringProducts
+import com.example.userblinkitclone.utils.FilteringProducts
 import com.example.userblinkitclone.databinding.ItemViewProductBinding
 import com.example.userblinkitclone.models.Product
 import kotlin.apply

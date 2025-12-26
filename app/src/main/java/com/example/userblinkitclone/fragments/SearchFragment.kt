@@ -14,9 +14,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.example.userblinkitclone.CartListener
+import com.example.userblinkitclone.utils.CartListener
 import com.example.userblinkitclone.R
-import com.example.userblinkitclone.Utils
+import com.example.userblinkitclone.utils.Utils
 import com.example.userblinkitclone.adapters.AdapterProduct
 import com.example.userblinkitclone.databinding.FragmentSearchBinding
 import com.example.userblinkitclone.databinding.ItemViewProductBinding

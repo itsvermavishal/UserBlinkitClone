@@ -2,17 +2,11 @@ package com.example.userblinkitclone.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.fragment.app.viewModels
-import com.example.userblinkitclone.CartListener
-import com.example.userblinkitclone.R
+import com.example.userblinkitclone.utils.CartListener
 import com.example.userblinkitclone.adapters.AdapterCartProducts
 import com.example.userblinkitclone.databinding.ActivityUsersMainBinding
 import com.example.userblinkitclone.databinding.BsCartProductsBinding
