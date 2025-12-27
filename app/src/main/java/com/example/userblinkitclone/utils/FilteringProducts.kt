@@ -4,48 +4,51 @@ import android.widget.Filter
 import com.example.userblinkitclone.adapters.AdapterProduct
 import com.example.userblinkitclone.models.Product
 import java.util.Locale
-import kotlin.collections.filter
-import kotlin.text.contains
-import kotlin.text.isNullOrEmpty
-import kotlin.text.trim
-import kotlin.text.uppercase
 
 class FilteringProducts(
-    val adapter: AdapterProduct,
-    val filter: ArrayList<Product>
+    private val adapter: AdapterProduct,
+    private val originalList: ArrayList<Product>
 ) : Filter() {
-    override fun performFiltering(constraint: CharSequence?): FilterResults? {
-        val result = FilterResults()
-        if (!constraint.isNullOrEmpty()) {
-            val query = constraint.toString().trim().uppercase(Locale.getDefault())
-            val filteredList = filter.filter { product ->
-                val title = product.productTitle?.uppercase(Locale.getDefault()) ?: ""
-                val category = product.productCategory?.uppercase(Locale.getDefault()) ?: ""
-                val type = product.productType?.uppercase(Locale.getDefault()) ?: ""
-                val price = product.productPrice?.toString()?.uppercase(Locale.getDefault()) ?: ""
 
-                title.contains(query) ||
-                category.contains(query) ||
-                type.contains(query) ||
-                price.contains(query)
-            }
+    override fun performFiltering(constraint: CharSequence?): FilterResults {
+        val results = FilterResults()
+        val filteredList = ArrayList<Product>()
 
+        val query = constraint
+            ?.toString()
+            ?.trim()
+            ?.lowercase(Locale.getDefault())
 
-            result.values = filteredList
-            result.count = filteredList.size
+        if (query.isNullOrEmpty()) {
+            filteredList.addAll(originalList)
         } else {
-            result.values = filter
-            result.count = filter.size
+            for (product in originalList) {
+
+                val title = product.productTitle?.lowercase() ?: ""
+                val category = product.productCategory?.lowercase() ?: ""
+                val type = product.productType?.lowercase() ?: ""
+                val price = product.productPrice?.toString() ?: ""
+
+                // 🔥 LETTER-BY-LETTER SEARCH
+                if (
+                    title.contains(query) ||
+                    category.contains(query) ||
+                    type.contains(query) ||
+                    price.contains(query)
+                ) {
+                    filteredList.add(product)
+                }
+            }
         }
 
-        return result
+        results.values = filteredList
+        results.count = filteredList.size
+        return results
     }
 
-    override fun publishResults(
-        constraint: CharSequence?,
-        results: FilterResults
-    ) {
-        val list = results.values as List<Product>
-        adapter.differ.submitList(list)
+    override fun publishResults(constraint: CharSequence?, results: FilterResults) {
+        @Suppress("UNCHECKED_CAST")
+        val list = results.values as ArrayList<Product>
+        adapter.differ.submitList(list.toList())
     }
 }

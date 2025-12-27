@@ -78,6 +78,12 @@ class SearchFragment : Fragment() {
 
     private fun getAllTheProducts() {
         binding.shimmerViewContainer.visibility = View.VISIBLE
+        adapterProduct = AdapterProduct(
+            ::onAddButtonClicked,
+            ::onIncrementButtonClicked,
+            ::onDecrementButtonClicked
+        )
+        binding.rvProducts.adapter = adapterProduct
         lifecycleScope.launch {
             viewModel.fetchAllProducts().collect{
                 if (it.isEmpty()){
@@ -87,14 +93,8 @@ class SearchFragment : Fragment() {
                     binding.rvProducts.visibility = View.VISIBLE
                     binding.tvText.visibility = View.GONE
                 }
-                adapterProduct = AdapterProduct(
-                    ::onAddButtonClicked,
-                    ::onIncrementButtonClicked,
-                    ::onDecrementButtonClicked
-                )
-                binding.rvProducts.adapter = adapterProduct
-                adapterProduct.differ.submitList(it)
                 adapterProduct.originalList = it as ArrayList<Product>
+                adapterProduct.differ.submitList(it)
                 binding.shimmerViewContainer.visibility = View.GONE
             }
         }

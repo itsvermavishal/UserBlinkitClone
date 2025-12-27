@@ -103,10 +103,13 @@ class AdapterProduct(
 
     }
 
-    val filter : FilteringProducts? = null
+    private var productFilter: FilteringProducts? = null
     var originalList = ArrayList<Product>()
-    override fun getFilter(): Filter? {
-        if (filter == null) return FilteringProducts(this, originalList)
-        return filter
+    override fun getFilter(): Filter {
+        if (productFilter == null) {
+            productFilter = FilteringProducts(this, originalList)
+        }
+        return productFilter!!
     }
+
 }

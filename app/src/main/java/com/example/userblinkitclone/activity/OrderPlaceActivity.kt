@@ -1,5 +1,6 @@
 package com.example.userblinkitclone.activity
 
+import android.R.attr.data
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -22,6 +23,9 @@ import com.example.userblinkitclone.databinding.ActivityOrderPlaceBinding
 import com.example.userblinkitclone.databinding.AddressLayoutBinding
 import com.example.userblinkitclone.models.Orders
 import com.example.userblinkitclone.viewmodels.UserViewModel
+import com.phonepe.intent.sdk.api.B2BPGRequest
+import com.phonepe.intent.sdk.api.B2BPGRequestBuilder
+import com.phonepe.intent.sdk.api.PhonePe
 import com.phonepe.intent.sdk.api.PhonePeInitException
 import com.phonepe.intent.sdk.api.PhonePeKt
 import com.phonepe.intent.sdk.api.models.PhonePeEnvironment
@@ -48,15 +52,22 @@ class OrderPlaceActivity : AppCompatActivity() {
         onPlaceOrderClicked()
     }
 
+    val payloadBase64 = Base64.encodeToString(
+        data.toString().toByteArray(Charsets.UTF_8),
+        Base64.NO_WRAP
+    )
+
+    val checksum = sha256(payloadBase64 + Constants.apiEndPoint + Constants.SALT_KEY) + "###1";
+
     private fun initializePhonePe() {
 
         val data = JSONObject()
         // Initialize PhonePe SDK
-        PhonePeKt.init(this, PhonePeEnvironment.UAT, Constants.MERCHANT_ID, "")
+        PhonePe.init(this, PhonePeEnvironment.SANDBOX, Constants.MERCHANT_ID, "")
 
         data.put("merchantId", Constants.MERCHANT_ID)
         data.put("merchantTransactionId", Constants.merchantTransactionId)
-        data.put("amount", 200) //Long. manadatory
+        data.put("amount", 20000) //Long. manadatory
         data.put("mobileNumber", "9919350336") // String. manadatory
         data.put("callbackUrl", "https://webhook.site/callback-ur") //String. Manadatory
 
@@ -175,17 +186,15 @@ class OrderPlaceActivity : AppCompatActivity() {
         }
     }
 
-    private fun getPaymentView(){
-        try {
-            PhonePeKt.getImplicitIntent(this, b2BPGRequest, "com.phonepe.simulator")
-                .let{
-                    phonePeView.launch(it)
-                }
-        }
-        catch (e : PhonePeInitException){
-            Utils.showToast(this, e.message.toString())
-        }
+    private fun getPaymentView() {
+        val intent = PhonePe.getImplicitIntent(
+            this,
+            payloadBase64, // base64 payload
+            checksum
+        )
+        phonePeView.launch(intent!!)
     }
+
 
     private fun saveAddress(
         alertDialog: AlertDialog,

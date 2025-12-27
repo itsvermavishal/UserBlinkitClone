@@ -110,15 +110,16 @@ class CategoryFragment : Fragment() {
 
     }
 
-    private fun onIncrementButtonClicked(product: Product, productBinding: ItemViewProductBinding){
-        var itemCountInc = productBinding.tvProductCount.text.toString().toInt()
-        itemCountInc++
+    private fun onIncrementButtonClicked(
+        product: Product,
+        productBinding: ItemViewProductBinding
+    ) {
+        val itemCountInc = productBinding.tvProductCount.text.toString().toIntOrNull()?.plus(1) ?: 1
+        val stock = product.productStock ?: 0  // Null-safe
 
-        if (product.productStock!! + 1 > itemCountInc){
+        if (itemCountInc <= stock) {
             productBinding.tvProductCount.text = itemCountInc.toString()
             cartListener?.showCartLayout(1)
-
-            //Step - 2
 
             product.itemCount = itemCountInc
             lifecycleScope.launch {
@@ -126,42 +127,41 @@ class CategoryFragment : Fragment() {
                 saveProductInRoomDb(product)
                 viewModel.updateItemCount(product, itemCountInc)
             }
-        }
-        else{
+        } else {
             Utils.showToast(requireContext(), "Out of Stock")
         }
     }
 
-    private fun onDecrementButtonClicked(product: Product, productBinding: ItemViewProductBinding){
-        var itemCountDec = productBinding.tvProductCount.text.toString().toInt()
-        itemCountDec--
-
+    private fun onDecrementButtonClicked(
+        product: Product,
+        productBinding: ItemViewProductBinding
+    ) {
+        val itemCountDec = productBinding.tvProductCount.text.toString().toIntOrNull()?.minus(1) ?: 0
         product.itemCount = itemCountDec
+
         lifecycleScope.launch {
             cartListener?.savingCartItemCount(-1)
             saveProductInRoomDb(product)
             viewModel.updateItemCount(product, itemCountDec)
         }
 
-        if (itemCountDec > 0){
+        if (itemCountDec > 0) {
             productBinding.tvProductCount.text = itemCountDec.toString()
-        }
-        else{
-            lifecycleScope.launch {
-                viewModel.deleteCartProduct(product.productRandomId!!)
+        } else {
+            product.productRandomId?.let {
+                lifecycleScope.launch {
+                    viewModel.deleteCartProduct(it)
+                }
+                Log.d("VV", it)
             }
-            Log.d("VV", product.productRandomId!!)
             productBinding.tvAdd.visibility = View.VISIBLE
             productBinding.llProductCount.visibility = View.GONE
             productBinding.tvProductCount.text = "0"
         }
 
         cartListener?.showCartLayout(-1)
-
-        //Step - 2
-
-
     }
+
 
     private fun saveProductInRoomDb(product: Product) {
 

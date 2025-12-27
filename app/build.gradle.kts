@@ -110,7 +110,7 @@ dependencies {
     //shimmer effect
     implementation("com.facebook.shimmer:shimmer:0.5.0@aar")
 
-    //Room databse
+    //Room database
     val room_version = "2.6.1"
     implementation("androidx.room:room-runtime:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")
@@ -123,7 +123,7 @@ dependencies {
     annotationProcessor("com.github.bumptech.glide:compiler:4.15.0")
 
     //Phonepe
-    implementation("phonepe.intentsdk.android.release:IntentSDK:5.3.0")
+    implementation("phonepe.intentsdk.android.release:IntentSDK:3.0.0")
 
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")

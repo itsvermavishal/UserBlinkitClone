@@ -235,10 +235,17 @@ class UserViewModel(application: Application) : AndroidViewModel(application){
                 for (productType in snapshot.children){
                     val productTypeName = productType.key
                     val productList = ArrayList<Product>()
-                    for (products in productType.children){
+                    for (products in productType.children) {
+
+                        // Skip non-object nodes (String, Int, etc.)
+                        if (products.value !is Map<*, *>) continue
+
                         val product = products.getValue(Product::class.java)
-                        productList.add(product!!)
+                        product?.let {
+                            productList.add(it)
+                        }
                     }
+
                     val bestseller = Bestseller(productType = productTypeName, products = productList)
                     productTypeList.add(bestseller)
                 }
